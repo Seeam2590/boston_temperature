@@ -1,0 +1,35 @@
+---
+title: "Data Analysis on Boston Weather"
+author: "Seeam S. Noor"
+date: "February 12, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE, message = FALSE, echo = FALSE, error = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+  library(tidyverse)
+  boston_weather = read_csv("boston_weather.csv")
+  
+  #install.packages("lubridate")
+  library(lubridate)
+  
+  #install.packages('ggridges')
+  library(ggridges)
+  
+  #install.packages("viridis")
+  library(viridis)
+
+```
+
+```{r message = FALSE, echo = FALSE, error = FALSE, warning = FALSE}
+  boston_weather %>% 
+    mutate(t_month = month(DATE, label = TRUE, abbr = FALSE)) %>%
+    group_by(t_month) %>%
+    ggplot(aes(x = TMAX, y = fct_rev(t_month), fill = ..x..)) +
+    geom_density_ridges_gradient(scale = 3, rel_min_height = 0.01) +
+    scale_fill_viridis(name = "Temp. [F]", option = "A") +
+    labs(title = 'Maximum Daily Temperature in Boston: 1936 -- 2019', subtitle = 'Recorded at Boston Logan Airport', caption = 'Source: NOAA') +
+    xlab("Temperature") +
+    ylab(NULL)
+```
